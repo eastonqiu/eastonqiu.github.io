@@ -101,7 +101,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						
+						<a href="/tags/PHP-Laravel/" style="font-size: 20px;">PHP Laravel</a> <a href="/tags/PHP-Laravel-OAuth2/" style="font-size: 10px;">PHP Laravel OAuth2</a> <a href="/tags/工具/" style="font-size: 10px;">工具</a>
 					</div>
 				</section>
 				
@@ -161,10 +161,261 @@
 
       <div class="body-wrap">
   
-    <article id="post-hello-easton" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-laravel-zofe-rapyd-checkboxgroup-bug-fix" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/01/06/hello-easton/" class="article-date">
+      <a href="/2016/01/07/laravel-zofe-rapyd-checkboxgroup-bug-fix/" class="article-date">
+  	<time datetime="2016-01-07T02:36:36.000Z" itemprop="datePublished">2016-01-07</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/07/laravel-zofe-rapyd-checkboxgroup-bug-fix/">laravel插件 zofe/rapyd checkboxgroup bug修改</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>摘要：zofe/rapyd 是一个快速CURD的工具, 可灵活定制, 但使用过程中发现checkboxgroup的一个bug, 在去掉所有checkbox选项时, 数据库并没有将相应的多对多关系删掉</p>
+</blockquote>
+<p>以官方Demo为例:</p>
+<p>DataForm页面</p>
+<p><img src="http://static.oschina.net/uploads/space/2015/1112/162328_ANvA_2485194.png" alt=""></p>
+<p>去掉所有的复选框, 点击 Save 按钮</p>
+<p><img src="http://static.oschina.net/uploads/space/2015/1112/162329_Cu8e_2485194.png" alt=""></p>
+<p>重新打开DataForm页面, 数据并没有改变, 这是bug</p>
+<p>若至少保留其中一项, 则结果会改变</p>
+<p><img src="http://static.oschina.net/uploads/space/2015/1112/162328_ANvA_2485194.png" alt=""></p>
+<p>修改文件:</p>
+<pre class="brush:java;toolbar: true; auto-links: false;">vendor/zofe/rapyd/src/DataForm/Field/Field.php</pre>
+
+<p>  修改前:</p>
+<pre class="brush:java;toolbar: true; auto-links: false;">public function updateRelations() {
+.....
+case 'Illuminate\Database\Eloquent\Relations\BelongsToMany':
+
+                    $old_data = $this->relation->get()->modelKeys();
+                    $new_data = explode($this->serialization_sep, $data);
+
+                    $this->relation->detach($old_data);
+
+                    if ($data=='') {
+                        continue;
+                    }
+.....</pre>
+
+<p>修改后:</p>
+<pre class="brush:java;toolbar: true; auto-links: false;">public function updateRelations() {
+case 'Illuminate\Database\Eloquent\Relations\BelongsToMany':
+.....
+                    $old_data = $this->relation->get()->modelKeys();
+                    //  $data 改成 $this->new_value
+                    $new_data = explode($this->serialization_sep, $this->new_value);
+
+                    $this->relation->detach($old_data);
+
+                    //判断条件修改
+                    if (empty($this->new_value)) {
+                        break;
+                    }
+                    ......</pre>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PHP-Laravel/">PHP Laravel</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-laravel-administrator" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/07/laravel-administrator/" class="article-date">
+  	<time datetime="2016-01-07T02:31:02.000Z" itemprop="datePublished">2016-01-07</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/07/laravel-administrator/">Laravel-Administrator</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>摘要：Laravel后台管理神器， 快速开发必备</p>
+</blockquote>
+<p>官网：<a href="https://github.com/FrozenNode/Laravel-Administrator" target="_blank" rel="external">https://github.com/FrozenNode/Laravel-Administrator</a></p>
+<p>文档：<a href="http://administrator.frozennode.com/docs" target="_blank" rel="external">http://administrator.frozennode.com/docs</a></p>
+<p>关键：Model Configuration <a href="http://administrator.frozennode.com/docs/model-configuration" target="_blank" rel="external">http://administrator.frozennode.com/docs/model-configuration</a></p>
+<p>参考中文：<a href="http://wenda.golaravel.com/article/19" target="_blank" rel="external">http://wenda.golaravel.com/article/19</a></p>
+<p>model =&gt; ‘App\User’  需加上namespace</p>
+<p>地址： <a href="http://www.domain.com/admin" target="_blank" rel="external">www.domain.com/admin</a></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PHP-Laravel/">PHP Laravel</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-laravel5-1-oauth2-passwordgrant" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/07/laravel5-1-oauth2-passwordgrant/" class="article-date">
+  	<time datetime="2016-01-07T02:19:08.000Z" itemprop="datePublished">2016-01-07</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/07/laravel5-1-oauth2-passwordgrant/">Laravel 5.1 + OAuth2 PasswordGrant(密码授权模式)</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>摘要：目标: 实现后端OAuth2 PasswordGrant 密码授权模式环境, 为webapp或native app等应用端提供账号验证基础.</p>
+</blockquote>
+<p><span style="font-size: 16px;"></span></p>
+<p><strong><span style="font-size: 16px;">背景简述</span></strong></p>
+<p>本文意在搭建一个通用的应用后端服务环境, 账号验证是应用的基础环境之一. </p>
+<p>OAuth2可提供安全的验证环境, 以access_token作为访问安全资源的令牌, 作为单一的应用端与后端的交互方式, 采用password类型会更简洁一点, 若是要实现类似Google, Facebook或新浪微博的第三方登录平台模式, 请选用Authorisation code grant. </p>
+<p>OAuth类型参考说明: <a href="https://github.com/lucadegasperi/oauth2-server-laravel/wiki/Choosing-a-Grant" target="_blank" rel="external">https://github.com/lucadegasperi/oauth2-server-laravel/wiki/Choosing-a-Grant</a></p>
+<p>本文选用的OAuth2授权方式为: password, 需搭配 refresh_token使用, 在access_token过期后, 使用refresh_token申请新的access_token, 无需重新登录, 达到应用端登录一次,一直有效的效果. </p>
+<p>若<span style="line-height: 22.5px;">refresh_token失效, 则需用户重新登录, 这对对应着用户长期没有使用应用, 需让用户重新登录授权的场景. 一般时间可以设成一个月, 根据实际需求设置.</span></p>
+<p><span style="font-size: 16px;"><strong>环境:</strong></span></p>
+<p>Laravel 5.1 安装请参考博文: <a href="http://my.oschina.net/u/2485194/blog/518803" target="_blank" rel="external">http://my.oschina.net/u/2485194/blog/518803</a></p>
+<p>专为Laravel定制的OAuth2实现 oauth2-server-laravel : <a href="https://github.com/lucadegasperi/oauth2-server-laravel/wiki" target="_blank" rel="external">https://github.com/lucadegasperi/oauth2-server-laravel/wiki</a></p>
+<p><span style="line-height: 22.5px;">oauth2-server-laravel PasswordGrant安装及配置请参考官网文档, 已经很清楚了:</span></p>
+<p><span style="line-height: 22.5px;">安装配置: <a href="https://github.com/lucadegasperi/oauth2-server-laravel/wiki/Laravel-5-Installation" target="_blank" rel="external">https://github.com/lucadegasperi/oauth2-server-laravel/wiki/Laravel-5-Installation</a></span></p>
+<p><span style="line-height: 22.5px;">使用: <a href="https://github.com/lucadegasperi/oauth2-server-laravel/wiki/Implementing-an-Authorization-Server-with-the-Password-Grant" target="_blank" rel="external">https://github.com/lucadegasperi/oauth2-server-laravel/wiki/Implementing-an-Authorization-Server-with-the-Password-Grant</a></span></p>
+<p>本文重点:</p>
+<p>官网只说明了如何配置以及添加使用代码, 但未说明如何调用, 这可能会拦住不少菜鸟.</p>
+<p>ps: 这里纠正一下官网文档的一个”手误”: </p>
+<pre>'\App\PasswordVerifier@verify' 改成 '\App\PasswordGrantVerifier@verify' 与后面的类定义一致</pre>
+
+<p><span style="font-size: 16px;"><strong>测试数据准备</strong></span></p>
+<p>测试前,需要有一个AppID和AppSecret, 和第三方平台一样, 这是为了能识别是某一个应用的访问</p>
+<p>操作如下: 在oauth_clients表中加入一条app信息, 如:</p>
+<p><img src="http://static.oschina.net/uploads/space/2015/1022/175106_ddmh_2485194.png" alt=""></p>
+<p><span style="font-size: 16px;"><strong>模拟HTTP请求</strong></span></p>
+<p>这里模拟一下HTTP请求的过程, 直接贴图, 大家懂的</p>
+<p>授权获取access_token, 注意参数中的 client_id及client_secret需与oath_clients里的一致.</p>
+<p><img src="http://static.oschina.net/uploads/space/2015/1022/175134_82B1_2485194.png" alt=""></p>
+<p>access_token过期后, 用refresh_token进行更新, 返回新的 access_token 及 refresh_token</p>
+<p><img src="http://static.oschina.net/uploads/space/2015/1022/175229_gCU7_2485194.png" alt=""></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PHP-Laravel-OAuth2/">PHP Laravel OAuth2</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-sublime2-ubuntu-chinese input" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/06/sublime2-ubuntu-chinese input/" class="article-date">
   	<time datetime="2016-01-06T10:03:25.000Z" itemprop="datePublished">2016-01-06</time>
 </a>
     </div>
@@ -178,7 +429,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/06/hello-easton/">hello easton</a>
+      <a class="article-title" href="/2016/01/06/sublime2-ubuntu-chinese input/">ubuntu sublime 中文输入支持</a>
     </h1>
   
 
@@ -187,13 +438,45 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <blockquote>
+<p>摘要：sublime2 ubuntu环境下支持中文输入</p>
+</blockquote>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;">大致内容参考：</span><a href="http://my.oschina.net/tsl0922/blog/113495" target="_blank" rel="external"><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;">http://my.oschina.net/tsl0922/blog/113495</span></a></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;"><strong>补上内容</strong></span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;">sublime安装</span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;">添加源</span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;"><strong>sudo add-apt-repository ppa:webupd8team/sublime-text-2</strong></span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;">安装sublime</span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;"><strong>sudo apt-get update</strong></span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;"><strong>sudo apt-get install sublime-text</strong></span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;"></span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;"><strong>动态库编译环境</strong></span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;"><strong>sudo apt-get install build-essential</strong><br></span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;"><strong>sudo apt-get install libgtk2.0-dev</strong></span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;"></span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;"><strong>将生成的 sublime-imfix.so 移动到_</strong>/opt/sublime_text<em>2/下**</em>**</span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;"></span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;"><strong>修改subl脚本内容 （/usr/bin/subl）</strong></span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;"><strong><em>sudo gedit /usr/bin/subl</em></strong></span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;">将</span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;"><em><strong>#!/bin/sh</strong></em></span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;">_<strong>/opt/sublime_text_2/sublime_text “$@”</strong>_</span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;">修改为</span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;"><strong><em>#!/bin/sh</em></strong></span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;"><strong>_LD_PRELOAD=/opt/sublime_text_2/libsublime-imfix.so exec /opt/sublime_text_2/sublime<em>text “$@”</em></strong></span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;"><strong>最后重点</strong></span></p>
+<p><span style="font-family: 微软雅黑, 'Microsoft YaHei'; font-size: 14px;">若没生效， 请注销系统后再试</span></p>
+
       
     </div>
     
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工具/">工具</a></li></ul>
+	</div>
+
       
 
       
